@@ -9,7 +9,7 @@ class Implies(Formula):
         self.right = right
 
     def __str__(self):
-        return "(" + str(self.left) + ")->(" + str(self.right) + ")"
+        return "(" + str(self.left) + "->" + str(self.right) + ")"
 
     def __hash__(self):
         return hash((super().__hash__(), self.left, self.right))
