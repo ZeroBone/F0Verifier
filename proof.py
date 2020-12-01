@@ -41,7 +41,7 @@ class Proof:
                 print(str(formula) + " is proven by modus ponens")
                 continue
 
-            print(str(formula) + " <-- Invalid proof step")
+            print(str(formula) + " <-- This formula cannot be derived")
             # invalid proof step
             return False
 
