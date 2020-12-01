@@ -13,12 +13,12 @@ class Variable(Formula):
     def __hash__(self):
         return hash((super().__hash__(), self.name))
 
+    # compares two variables
     def __eq__(self, other):
 
         if not super().__eq__(other):
             return False
 
-        return self.name == other.name
+        assert isinstance(other, Variable)
 
-    def to_string(self):
-        return self.__str__()
+        return self.name == other.name

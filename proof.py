@@ -1,4 +1,5 @@
 from formula import *
+from implies import Implies
 
 
 class Proof:
@@ -8,18 +9,27 @@ class Proof:
         self.proof = proof
         # set of already proven formulas
         self.proven = set()
+        # dictionary with possible modus ponens derivations
+        # key: formula derivable using modus ponens
+        # value: formula from which the key can be derived with modus ponens
         self.modus_ponens = {}
 
-    def add_proven(self, formula):
+    # Adds the formula to the set of already proven formulas
+    # and makes sure that the possible modus ponens rules are also registered
+    def add_proven(self, formula: Formula):
 
         self.proven.add(formula)
 
         if formula.kind == FormulaType.IMPLICATION:
+
+            assert isinstance(formula, Implies)
+
             # check that this right hand side hasn't already been proven
             if formula.get_right() not in self.modus_ponens:
                 self.modus_ponens[formula.get_right()] = formula.get_left()
 
-    def verify(self):
+    # verifies whether the proof is correct
+    def verify(self) -> bool:
 
         for formula in self.assumptions:
             self.add_proven(formula)
@@ -32,10 +42,12 @@ class Proof:
                 continue
 
             if formula in self.proven:
-                print(str(formula) + " is already proven")
+                print(str(formula) + " is already proven and redundant")
                 continue
 
             # check whether modus ponens was applied in this step
+            # if the formula can be the right hand side of modus ponens
+            # and the left hand side is already proven
             if formula in self.modus_ponens and self.modus_ponens[formula] in self.proven:
                 self.add_proven(formula)
                 print(str(formula) + " is proven by modus ponens")

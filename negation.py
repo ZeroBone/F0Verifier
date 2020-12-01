@@ -16,12 +16,16 @@ class Not(Formula):
     def __hash__(self):
         return hash((super().__hash__(), self.operand))
 
+    # compares two negation formulas
     def __eq__(self, other):
 
         if not super().__eq__(other):
             return False
 
+        assert isinstance(other, Not)
+
         return self.operand == other.operand
 
+    # getter for the operand of the formula
     def get_form(self) -> Formula:
         return self.operand
