@@ -6,19 +6,31 @@ from proof import Proof
 
 def test_case_1():
     # This test case should return False
+
     a = Variable("a")
     b = Variable("b")
+
     test = Proof([a, b], [a, b, Implies(a, b)])
+
     return test.verify()
 
 
 def test_case_2():
     # This test case should return True
+
     a = Variable("a")
     b = Variable("b")
+
     assumptions = [a, b]
-    proof = [a, b, Implies(a, Implies(b, a))]
+
+    proof = [
+        a,
+        b,
+        Implies(a, Implies(b, a))
+    ]
+
     test = Proof(assumptions, proof)
+
     return test.verify()
 
 
@@ -179,6 +191,112 @@ def test_case_8():
     return test.verify()
 
 
+def test_case_9():
+    # This test case should return True
+
+    a = Variable("a")
+    b = Variable("b")
+    c = Variable("c")
+
+    na = Not(a)
+    nna = Not(na)
+
+    ab = Implies(a, b)
+    bc = Implies(b, c)
+
+    assumptions = [
+        a,
+        Implies(a, nna)
+    ]
+
+    proof = [
+        nna,
+        # Axiom 1
+        Implies(
+            nna,
+            Implies(
+                Not(Implies(ab, Not(bc))),
+                nna
+            )
+        ),
+        # MP
+        Implies(
+            Not(Implies(ab, Not(bc))),
+            nna
+        ),
+        # Axiom 3
+        Implies(
+            Implies(
+                Not(Implies(ab, Not(bc))),
+                nna
+            ),
+            Implies(
+                na,
+                Implies(ab, Not(bc))
+            )
+        ),
+        # MP
+        Implies(
+            na,
+            Implies(ab, Not(bc))
+        ),
+        # Axiom 2
+        Implies(
+            Implies(
+                na,
+                Implies(ab, Not(bc))
+            ),
+            Implies(
+                Implies(na, ab),
+                Implies(na, Not(bc))
+            )
+        ),
+        # MP
+        Implies(
+            Implies(na, ab),
+            Implies(na, Not(bc))
+        )
+    ]
+
+    test = Proof(assumptions, proof)
+
+    return test.verify()
+
+
+def test_case_10():
+    # This test case should return True
+
+    a = Variable("a")
+    b = Variable("b")
+    c = Variable("c")
+
+    na = Not(a)
+    nb = Not(b)
+
+    assumptions = [
+        # Proof by contradiction
+        Implies(
+            Implies(a, b),
+            Implies(Implies(a, nb), na)
+        ),
+        # Proof by contradiction - deduction theorem
+        Implies(a, b),
+        Implies(a, nb),
+        # Implication of inconsistency
+        Implies(na, Implies(a, c))
+    ]
+
+    proof = [
+        Implies(Implies(a, nb), na),
+        na,
+        Implies(a, c)
+    ]
+
+    test = Proof(assumptions, proof)
+
+    return test.verify()
+
+
 if __name__ == "__main__":
     print("Test case 1:")
     t1 = test_case_1()
@@ -219,6 +337,16 @@ if __name__ == "__main__":
     t8 = test_case_8()
     print("Proof correct: ", t8)
     assert not t8, "Test 8 failed"
+
+    print("Test case 9:")
+    t9 = test_case_9()
+    print("Proof correct: ", t9)
+    assert t9, "Test 9 failed"
+
+    print("Test case 10:")
+    t10 = test_case_10()
+    print("Proof correct: ", t10)
+    assert t10, "Test 10 failed"
 
     print("---")
     print("All tests passed!")

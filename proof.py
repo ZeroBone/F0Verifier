@@ -33,6 +33,8 @@ class Proof:
             else:
                 self.modus_ponens[right].add(left)
 
+    # returns whether the formula can be proven by using modus ponens
+    # on some already proven formula
     def proven_with_modus_ponens(self, formula: Formula) -> bool:
 
         if formula not in self.modus_ponens:
@@ -40,8 +42,9 @@ class Proof:
 
         possible_left_sides = self.modus_ponens[formula]
 
-        # there is a proof if and only if there is an intersections
+        # there is a proof if and only if the intersection
         # of the set of left hand sides with the set of proven formulas
+        # is not empty
         return bool(possible_left_sides & self.proven)
 
     # verifies whether the proof is correct
