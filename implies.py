@@ -21,14 +21,8 @@ class Implies(Formula):
 
         return self.left == other.left and self.right == other.right
 
-    def to_string(self):
-        return self.__str__()
-
-    def get_left(self):
+    def get_left(self) -> Formula:
         return self.left
 
-    def get_right(self):
+    def get_right(self) -> Formula:
         return self.right
-
-    def is_equal(self, formula):
-        return self == formula

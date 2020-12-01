@@ -22,6 +22,3 @@ class Variable(Formula):
 
     def to_string(self):
         return self.__str__()
-
-    def is_equal(self, formula):
-        return self == formula

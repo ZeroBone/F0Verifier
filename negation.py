@@ -23,8 +23,5 @@ class Not(Formula):
 
         return self.operand == other.operand
 
-    def to_string(self):
-        return self.__str__()
-
-    def get_form(self):
+    def get_form(self) -> Formula:
         return self.operand

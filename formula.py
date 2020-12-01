@@ -21,8 +21,11 @@ class Formula:
     def __eq__(self, other):
         return self.kind == other.kind
 
-    def modus_ponens(self, a, b):
-        pass
+    def get_left(self):
+        raise RuntimeError("get_left method not overriden")
+
+    def get_right(self):
+        raise RuntimeError("get_left method not overriden")
 
     def is_axiom1(self):
 
@@ -37,7 +40,7 @@ class Formula:
 
         q_implies_p_p = q_implies_p.get_right()
 
-        return p.is_equal(q_implies_p_p)
+        return p == q_implies_p_p
 
     def is_axiom2(self):
 
@@ -70,10 +73,10 @@ class Formula:
         p_implies_r_r = p_implies_r.get_right()
 
         return (
-                p.is_equal(p_implies_q_p) and
-                p.is_equal(p_implies_r_p) and
-                q_implies_r_q.is_equal(p_implies_q_q) and
-                q_implies_r_r.is_equal(p_implies_r_r)
+                p == p_implies_q_p and
+                p == p_implies_r_p and
+                q_implies_r_q == p_implies_q_q and
+                q_implies_r_r == p_implies_r_r
         )
 
     def is_axiom3(self):
@@ -97,10 +100,7 @@ class Formula:
         q = q_implies_p.get_left()
         p = q_implies_p.get_right()
 
-        return not_q.get_form().is_equal(q) and not_p.get_form().is_equal(p)
+        return not_q.get_form() == q and not_p.get_form() == p
 
     def is_axiom(self):
         return self.is_axiom1() or self.is_axiom2() or self.is_axiom3()
-
-    def is_equal(self, formula):
-        return self == formula
