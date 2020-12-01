@@ -32,6 +32,11 @@ class Proof:
     def verify(self) -> bool:
 
         for formula in self.assumptions:
+
+            if formula in self.proven:
+                print(str(formula) + " is a redundant assumption")
+                continue
+
             self.add_proven(formula)
 
         for formula in self.proof:

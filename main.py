@@ -86,6 +86,52 @@ def test_case_4():
     return test.verify()
 
 
+def test_case_5():
+    # This test case should return True
+
+    a = Variable("a")
+    b = Variable("b")
+    c = Variable("c")
+
+    assumptions = [
+        a,
+        Implies(a, b),
+        Implies(b, c)
+    ]
+
+    proof = [
+        b,
+        c
+    ]
+
+    test = Proof(assumptions, proof)
+
+    return test.verify()
+
+
+def test_case_6():
+    # This test case should return False
+
+    a = Variable("a")
+    b = Variable("b")
+    c = Variable("c")
+
+    assumptions = [
+        a,
+        Implies(a, b),
+        Implies(b, c)
+    ]
+
+    proof = [
+        c,
+        b
+    ]
+
+    test = Proof(assumptions, proof)
+
+    return test.verify()
+
+
 if __name__ == "__main__":
     print("Test case 1: ", test_case_1())
     print("---")
@@ -94,3 +140,7 @@ if __name__ == "__main__":
     print("Test case 3: ", test_case_3())
     print("---")
     print("Test case 4: ", test_case_4())
+    print("---")
+    print("Test case 5: ", test_case_5())
+    print("---")
+    print("Test case 6: ", test_case_6())
