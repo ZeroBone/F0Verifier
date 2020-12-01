@@ -11,12 +11,12 @@ class Proof:
         self.proven = set()
         # dictionary with possible modus ponens derivations
         # key: formula derivable using modus ponens
-        # value: formula from which the key can be derived with modus ponens
+        # value: set of formulas from which the key can be derived with modus ponens
         self.modus_ponens = {}
 
     # Adds the formula to the set of already proven formulas
     # and makes sure that the possible modus ponens rules are also registered
-    def add_proven(self, formula: Formula):
+    def add_proven(self, formula: Formula) -> None:
 
         self.proven.add(formula)
 
@@ -24,9 +24,25 @@ class Proof:
 
             assert isinstance(formula, Implies)
 
+            right = formula.get_right()
+            left = formula.get_left()
+
             # check that this right hand side hasn't already been proven
-            if formula.get_right() not in self.modus_ponens:
-                self.modus_ponens[formula.get_right()] = formula.get_left()
+            if right not in self.modus_ponens:
+                self.modus_ponens[right] = {left}
+            else:
+                self.modus_ponens[right].add(left)
+
+    def proven_with_modus_ponens(self, formula: Formula) -> bool:
+
+        if formula not in self.modus_ponens:
+            return False
+
+        possible_left_sides = self.modus_ponens[formula]
+
+        # there is a proof if and only if there is an intersections
+        # of the set of left hand sides with the set of proven formulas
+        return bool(possible_left_sides & self.proven)
 
     # verifies whether the proof is correct
     def verify(self) -> bool:
@@ -53,7 +69,7 @@ class Proof:
             # check whether modus ponens was applied in this step
             # if the formula can be the right hand side of modus ponens
             # and the left hand side is already proven
-            if formula in self.modus_ponens and self.modus_ponens[formula] in self.proven:
+            if self.proven_with_modus_ponens(formula):
                 self.add_proven(formula)
                 print(str(formula) + " is proven by modus ponens")
                 continue
