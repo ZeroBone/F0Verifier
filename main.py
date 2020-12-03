@@ -298,6 +298,36 @@ def test_case_10():
     return test.verify()
 
 
+def test_case_11():
+    # This test case should return True
+
+    a = Variable("a")
+    b = Variable("b")
+    c = Variable("c")
+    d = Variable("d")
+
+    assumptions = [
+        a,
+        Implies(a, b),
+        Implies(b, c)
+    ]
+
+    proof = [
+        # MP
+        b,
+        # MP
+        c,
+        # Axiom 1
+        Implies(c, Implies(Not(d), c)),
+        # MP
+        Implies(Not(d), c)
+    ]
+
+    test = Proof(assumptions, proof)
+
+    return test.verify()
+
+
 # constructs a proof of a -> c assuming a -> b and b -> c are proven
 def prove_implication_transitivity(a, b, c):
 
@@ -354,16 +384,16 @@ def prove_implication_transitivity(a, b, c):
     ]
 
 
-def test_case_11():
+def test_case_12():
     # This test case should return True
 
     a = Variable("a")
-    b = Variable("a")
-    c = Variable("a")
+    b = Variable("b")
+    c = Variable("c")
 
     assumptions = [
         Implies(a, b),
-        Implies(a, c)
+        Implies(b, c)
     ]
 
     proof = prove_implication_transitivity(a, b, c)
@@ -373,7 +403,7 @@ def test_case_11():
     return test.verify()
 
 
-def test_case_12():
+def test_case_13():
     # This test case should return True
 
     a = Variable("a")
@@ -431,73 +461,38 @@ def test_case_12():
         Implies(nna, a)
     ]
 
-    print(len(proof))
-
     test = Proof(assumptions, proof)
 
     return test.verify()
 
 
+def run_test(test_case, expected):
+    print("Starting test case", test_case, "...")
+
+    result = test_case()
+
+    print("Proof correct:", result)
+
+    assert result == expected, "Test " + str(test_case) + " failed!"
+
+    print("Test " + str(test_case) + " passed!")
+    print("")
+
+
 if __name__ == "__main__":
-    print("Test case 1:")
-    t1 = test_case_1()
-    print("Proof correct: ", t1)
-    assert not t1, "Test 1 failed"
 
-    print("Test case 2:")
-    t2 = test_case_2()
-    print("Proof correct: ", t2)
-    assert t2, "Test 2 failed"
+    run_test(test_case_1, False)
+    run_test(test_case_2, True)
+    run_test(test_case_3, True)
+    run_test(test_case_4, True)
+    run_test(test_case_5, True)
+    run_test(test_case_6, False)
+    run_test(test_case_7, True)
+    run_test(test_case_8, False)
+    run_test(test_case_9, True)
+    run_test(test_case_10, True)
+    run_test(test_case_11, True)
+    run_test(test_case_12, True)
+    run_test(test_case_13, True)
 
-    print("Test case 3:")
-    t3 = test_case_3()
-    print("Proof correct: ", t3)
-    assert t3, "Test 3 failed"
-
-    print("Test case 4:")
-    t4 = test_case_4()
-    print("Proof correct: ", t4)
-    assert t4, "Test 4 failed"
-
-    print("Test case 5:")
-    t5 = test_case_5()
-    print("Proof correct: ", t5)
-    assert t5, "Test 5 failed"
-
-    print("Test case 6:")
-    t6 = test_case_6()
-    print("Proof correct: ", t6)
-    assert not t6, "Test 6 failed"
-
-    print("Test case 7:")
-    t7 = test_case_7()
-    print("Proof correct: ", t7)
-    assert t7, "Test 7 failed"
-
-    print("Test case 8:")
-    t8 = test_case_8()
-    print("Proof correct: ", t8)
-    assert not t8, "Test 8 failed"
-
-    print("Test case 9:")
-    t9 = test_case_9()
-    print("Proof correct: ", t9)
-    assert t9, "Test 9 failed"
-
-    print("Test case 10:")
-    t10 = test_case_10()
-    print("Proof correct: ", t10)
-    assert t10, "Test 10 failed"
-
-    print("Test case 11:")
-    t11 = test_case_11()
-    print("Proof correct: ", t11)
-    assert t11, "Test 11 failed"
-
-    print("Test case 12:")
-    t12 = test_case_12()
-    print("Proof correct: ", t12)
-    assert t12, "Test 12 failed"
-
-    print("---")
     print("All tests passed!")
